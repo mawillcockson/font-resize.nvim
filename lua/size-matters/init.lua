@@ -45,13 +45,17 @@ end
 function M.update_font(direct, num)
 	if not get_font() then return end
 	num = type(num) == "string" and tonumber(num) or config.step_size
+	local newFontSize
 	if direct == "grow" then
-		currFont = currFontList .. ":h" .. tostring(tonumber(currFontSize) + num) .. currRemainingFontOptions
-		if config.notifications then notify(" FontSize " .. tonumber(currFontSize) + num, vim.log.levels.INFO, notifyOpts) end
+		newFontSize = tonumber(currFontSize) + num
 	elseif direct == "shrink" then
-		currFont = currFontList .. ":h" .. tostring(tonumber(currFontSize) - num) .. currRemainingFontOptions
-		if config.notifications then notify(" FontSize " .. tonumber(currFontSize) - num, vim.log.levels.INFO, notifyOpts) end
+		newFontSize = tonumber(currFontSize) - num
+	else
+		return
 	end
+	if newFontSize < 1 then newFontSize = 1 end
+	currFont = currFontList .. ":h" .. tostring(newFontSize) .. currRemainingFontOptions
+	if config.notifications then notify(" FontSize " .. newFontSize, vim.log.levels.INFO, notifyOpts) end
 	vim.opt.guifont = currFont
 end
 
