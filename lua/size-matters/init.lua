@@ -27,14 +27,23 @@ local function get_font()
 	currFont = vim.api.nvim_get_option("guifont")
 	-- split at the first colon character
 	currFontList, currRemainingFontOptions = currFont:match("^(.-)(:.*)$")
+	if currFontList == nil or currRemainingFontOptions == nil then
+		vim.notify("size-matters: error matching 'guifont'", vim.log.levels.ERROR)
+		return false
+	end
 	-- match the number part of the height option
 	currFontSize = currRemainingFontOptions:match(":h([%d.]+)")
+	if currFontSize == nil or currFontSize == "" then
+		vim.notify("size-matters: error matching 'guifont'", vim.log.levels.ERROR)
+		return false
+	end
 	-- remove the height option
 	currRemainingFontOptions = currRemainingFontOptions:gsub(":h[%d.]+", "")
+	return true
 end
 
 function M.update_font(direct, num)
-	get_font()
+	if not get_font() then return end
 	num = type(num) == "string" and tonumber(num) or config.step_size
 	if direct == "grow" then
 		currFont = currFontList .. ":h" .. tostring(tonumber(currFontSize) + num) .. currRemainingFontOptions
