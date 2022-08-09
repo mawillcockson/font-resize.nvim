@@ -10,7 +10,16 @@ local config = {
 	reset_font = vim.api.nvim_get_option("guifont")
 }
 
-function M.setup(opts) config = vim.tbl_deep_extend("keep", opts, config) end
+function M.setup(opts)
+  config = vim.tbl_deep_extend("keep", opts, config)
+  if config.notifications and not notify_status then
+    vim.notify(
+      "size-matters: rcarriga/nvim-notify not installed, falling back to builtin vim.notify()",
+      vim.log.levels.WARN
+    )
+    notify = vim.notify
+  end
+end
 
 local currFont, currFontList, currRemainingFontOptions, currFontSize
 
@@ -29,17 +38,17 @@ function M.update_font(direct, num)
 	num = type(num) == "string" and tonumber(num) or config.step_size
 	if direct == "grow" then
 		currFont = currFontList .. ":h" .. tostring(tonumber(currFontSize) + num) .. currRemainingFontOptions
-		if config.notifications then notify(" FontSize " .. tonumber(currFontSize) + num, "info", notifyOpts) end
+		if config.notifications then notify(" FontSize " .. tonumber(currFontSize) + num, vim.log.levels.INFO, notifyOpts) end
 	elseif direct == "shrink" then
 		currFont = currFontList .. ":h" .. tostring(tonumber(currFontSize) - num) .. currRemainingFontOptions
-		if config.notifications then notify(" FontSize " .. tonumber(currFontSize) - num, "info", notifyOpts) end
+		if config.notifications then notify(" FontSize " .. tonumber(currFontSize) - num, vim.log.levels.INFO, notifyOpts) end
 	end
 	vim.opt.guifont = currFont
 end
 
 function M.reset_font()
 	vim.opt.guifont = config.reset_font
-	if config.notifications then notify(" " .. config.reset_font, "info", notifyOpts) end
+	if config.notifications then notify(" " .. config.reset_font, vim.log.levels.INFO, notifyOpts) end
 end
 
 local cmd = vim.api.nvim_create_user_command
