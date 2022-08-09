@@ -12,22 +12,26 @@ local config = {
 
 function M.setup(opts) config = vim.tbl_deep_extend("keep", opts, config) end
 
-local currFont, currFontName, currFontSize
+local currFont, currFontList, currRemainingFontOptions, currFontSize
 
 local function get_font()
 	currFont = vim.api.nvim_get_option("guifont")
-	currFontName = currFont:gsub("(.*)%:.*$", "%1")
-	currFontSize = currFont:gsub(".*:h", "")
+	-- split at the first colon character
+	currFontList, currRemainingFontOptions = currFont:match("^(.-)(:.*)$")
+	-- match the number part of the height option
+	currFontSize = currRemainingFontOptions:match(":h([%d.]+)")
+	-- remove the height option
+	currRemainingFontOptions = currRemainingFontOptions:gsub(":h[%d.]+", "")
 end
 
 function M.update_font(direct, num)
 	get_font()
 	num = type(num) == "string" and tonumber(num) or config.step_size
 	if direct == "grow" then
-		currFont = currFontName .. ":h" .. tostring(tonumber(currFontSize) + num)
+		currFont = currFontList .. ":h" .. tostring(tonumber(currFontSize) + num) .. currRemainingFontOptions
 		if config.notifications then notify(" FontSize " .. tonumber(currFontSize) + num, "info", notifyOpts) end
 	elseif direct == "shrink" then
-		currFont = currFontName .. ":h" .. tostring(tonumber(currFontSize) - num)
+		currFont = currFontList .. ":h" .. tostring(tonumber(currFontSize) - num) .. currRemainingFontOptions
 		if config.notifications then notify(" FontSize " .. tonumber(currFontSize) - num, "info", notifyOpts) end
 	end
 	vim.opt.guifont = currFont
