@@ -36,7 +36,7 @@ function M.setup(opts)
     if type(v) ~= type(M.default_config[k]) then
       vim.notify(
         "font-resize: for option '"..tostring(k).."' expected type '"..type(M.default_config[k])..
-        "' got type '"..type(v)"'",
+        "' got type '"..type(v).."'",
         ERROR
       )
       return
