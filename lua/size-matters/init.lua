@@ -71,6 +71,7 @@ function M.setup(opts)
   M.font_change_event()
 end
 
+-- NOTE: This should be called whenever 'guifont' is changed; autocommand?
 function M.font_change_event()
   local guifont = vim_o.guifont
   -- split at the first colon character
