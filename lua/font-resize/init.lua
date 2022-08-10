@@ -148,7 +148,7 @@ function M.reset_font()
   if notify then
     notify(" "..default_guifont, INFO, notifyOpts)
   end
-  config.set_font_function(default_guifont)
+  M.config.set_font_function(default_guifont)
 end
 
 local cmd = vim.api.nvim_create_user_command
