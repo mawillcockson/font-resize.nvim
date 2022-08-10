@@ -15,7 +15,7 @@ local notifyOpts = {
 }
 
 M.default_config = {
-  default_mappings = true,
+  use_default_mappings = true,
   step_size = 1,
   notifications = notify_status,
   default_guifont = vim_o.guifont,
@@ -53,7 +53,7 @@ function M.setup(opts)
     notify = false
   end
 
-  if M.config.default_mappings then
+  if M.config.use_default_mappings then
     local map = vim.keymap.set
     --[[ I don't know how to map these
     ---- the last comment on this answer has some detail:
