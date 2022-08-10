@@ -139,8 +139,7 @@ function M.decrease()
   if notify then
     notify(" font size "..new_size, INFO, notifyOpts)
   end
-  -- config.set_font_function(config.font_list..":h"..new_size..config.remaining_opts)
-  vim_o.guifont = config.font_list..":h"..new_size..config.remaining_opts
+  config.set_font_function(config.font_list..":h"..new_size..config.remaining_opts)
   config.size = new_size
 end
 
