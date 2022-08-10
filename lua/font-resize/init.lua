@@ -55,17 +55,26 @@ function M.setup(opts)
 
   if M.config.use_default_mappings then
     local map = vim.keymap.set
-    --[[ I don't know how to map these
-    ---- the last comment on this answer has some detail:
-    ---- https://stackoverflow.com/a/7653633
-    ---- I don't know what the story is in Neovim
-    map("n", "<C-+>", M.increase, { desc = "Increase font size" })
-    map("n", "<C-S-+>", M.increase, { desc = "Increase font size" })
+    -- I don't know how to map all of these consistently.
+    -- The last comment on this answer has some detail:
+    -- https://stackoverflow.com/a/7653633
+    -- I don't know what the story is in Neovim
+    --
+    ---[[ With testing, the following work in:
+    ----- - neovim-qt
+    ----- - Goneovim
+    ----- - FVim
+    map("n", "<C-=>", M.increase, { desc = "Increase font size" })
     map("n", "<C-->", M.decrease, { desc = "Decrease font size" })
-    map("n", "<A-C-=>", M.reset_font, { desc = "Reset to default font" })
-    --]]
+    map("n", "<C-0>", M.reset_font, { desc = "Reset to default font" })
+    ---]]
+    ---[[ These work in:
+    ----- - neovim-qt
+    ----- - Neovide
+    ----- - FVim
     map("n", "<C-ScrollWheelUp>", M.increase, { desc = "Increase font size" })
     map("n", "<C-ScrollWheelDown>", M.decrease, { desc = "Decrease font size" })
+    ---]]
   end
 
   M.font_change_event()
