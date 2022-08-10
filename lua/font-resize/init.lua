@@ -23,6 +23,7 @@ M.default_config = {
 }
 
 M.config = false
+local internal_call = false
 
 function M.setup(opts)
   for k, v in pairs(opts) do
@@ -80,8 +81,12 @@ function M.setup(opts)
   M.font_change_event()
 end
 
--- NOTE: This should be called whenever 'guifont' is changed; autocommand?
 function M.font_change_event()
+  if internal_call then
+    internal_call = false
+    return
+  end
+
   local guifont = vim_o.guifont
   -- split at the first colon character
   local font_list, remaining_opts = guifont:match("^(.-)(:.*)$")
@@ -120,6 +125,7 @@ function M.increase()
   if notify then
     notify(" font size "..new_size, INFO, notifyOpts)
   end
+  internal_call = true
   config.set_font_function(config.font_list..":h"..new_size..config.remaining_opts)
   config.size = new_size
 end
@@ -139,6 +145,7 @@ function M.decrease()
   if notify then
     notify(" font size "..new_size, INFO, notifyOpts)
   end
+  internal_call = true
   config.set_font_function(config.font_list..":h"..new_size..config.remaining_opts)
   config.size = new_size
 end
@@ -155,5 +162,13 @@ local cmd = vim.api.nvim_create_user_command
 cmd("FontSizeUp", M.increase, {})
 cmd("FontSizeDown", M.decrease, {})
 cmd("FontReset", M.reset_font, {})
+
+local font_resize_augroup = "font_resize_autocmds"
+vim.api.nvim_create_augroup(font_resize_augroup, {clear = true})
+vim.api.nvim_create_autocmd("OptionSet", {
+  group = font_resize_augroup,
+  pattern = "guifont",
+  callback = M.font_change_event,
+})
 
 return M
