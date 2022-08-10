@@ -28,14 +28,14 @@ function M.setup(opts)
   for k, v in pairs(opts) do
     if M.default_config[k] == nil then
       vim.notify(
-        "size-matters: unrecognized configuration option: '"..tostring(k).."'",
+        "font-resize: unrecognized configuration option: '"..tostring(k).."'",
         WARN
       )
       opts[k] = nil
     end
     if type(v) ~= type(M.default_config[k]) then
       vim.notify(
-        "size-matters: for option '"..tostring(k).."' expected type '"..type(M.default_config[k])..
+        "font-resize: for option '"..tostring(k).."' expected type '"..type(M.default_config[k])..
         "' got type '"..type(v)"'",
         ERROR
       )
@@ -45,7 +45,7 @@ function M.setup(opts)
   M.config = vim.tbl_deep_extend("keep", opts, M.default_config)
   if M.config.notifications and not notify_status then
     vim.notify(
-      "size-matters: rcarriga/nvim-notify not installed, falling back to builtin vim.notify()",
+      "font-resize: rcarriga/nvim-notify not installed, falling back to builtin vim.notify()",
       WARN
     )
     notify = vim.notify
@@ -77,14 +77,14 @@ function M.font_change_event()
   -- split at the first colon character
   local font_list, remaining_opts = guifont:match("^(.-)(:.*)$")
   if font_list == nil or remaining_opts == nil then
-    vim.notify("size-matters: error matching 'guifont'", ERROR)
+    vim.notify("font-resize: error matching 'guifont'", ERROR)
     M.config = false
     return
   end
   -- match the number part of the height option
   local size = tonumber(remaining_opts:match(":h([%d.]+)"))
   if not size then
-    vim.notify("size-matters: error matching 'guifont' height option", ERROR)
+    vim.notify("font-resize: error matching 'guifont' height option", ERROR)
     M.config = false
     return
   end
@@ -100,7 +100,7 @@ function M.increase()
   local config = M.config
   if not config then
     vim.notify(
-      "size-matters: not configured (was setup() called?)",
+      "font-resize: not configured (was setup() called?)",
       ERROR
     )
     return
@@ -119,7 +119,7 @@ function M.decrease()
   local config = M.config
   if not config then
     vim.notify(
-      "size-matters: not configured (was setup() called?)",
+      "font-resize: not configured (was setup() called?)",
       ERROR
     )
     return
