@@ -20,7 +20,7 @@ The plugin can be loaded like a normal plugin in e.g. [`init.lua`][]. Additional
 
 ```lua
 if vim.g.neovide or vim.g.goneovim or vim.g.nvui or vim.g.gnvim then
-	require("font-resize")
+  require("font-resize")
 end
 ```
 
@@ -43,7 +43,7 @@ If using [rcarriga/nvim-notify][], the background colour of the notification pop
 
 ```lua
 if vim.g.neovide or vim.g.goneovim or vim.g.nvui or vim.g.gnvim then
-	require("size-matters")
+  require("size-matters")
     require("notify").setup({
       background_colour = "#000000" -- hex code (e.g. your terminal or ui's background colour)
     })
