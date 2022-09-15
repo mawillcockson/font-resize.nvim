@@ -104,6 +104,11 @@ function M.font_change_event()
   end
 
   local guifont = vim_o.guifont
+  if guifont == "" then
+    vim.notify("font-resize: empty 'guifont' option", ERROR)
+    return
+  end
+
   -- split at the first colon character
   local font_list, remaining_opts = guifont:match("^(.-)(:.*)$")
   if font_list == nil or remaining_opts == nil then
