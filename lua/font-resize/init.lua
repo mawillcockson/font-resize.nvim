@@ -49,6 +49,7 @@ function M.setup(opts)
       "font-resize: rcarriga/nvim-notify not installed, falling back to builtin vim.notify()",
       WARN
     )
+    -- defined as local at module scope
     notify = vim.notify
   elseif not M.config.notifications then
     notify = false
@@ -63,16 +64,18 @@ function M.setup(opts)
     --
     ---[[ With testing, the following work in:
     ----- - neovim-qt
-    ----- - Goneovim
     ----- - FVim
+    ----- - Goneovim
+    -- <C-=> is equivalent to pressing Control and the +/= key
+    -- These are meant to mimic the common key bindings in browsers for zooming
     map("n", "<C-=>", M.increase, { desc = "Increase font size" })
     map("n", "<C-->", M.decrease, { desc = "Decrease font size" })
     map("n", "<C-0>", M.reset_font, { desc = "Reset to default font" })
     ---]]
     ---[[ These work in:
     ----- - neovim-qt
-    ----- - Neovide
     ----- - FVim
+    ----- - Neovide
     map("n", "<C-ScrollWheelUp>", M.increase, { desc = "Increase font size" })
     map("n", "<C-ScrollWheelDown>", M.decrease, { desc = "Decrease font size" })
     ---]]
@@ -82,6 +85,19 @@ function M.setup(opts)
 end
 
 function M.font_change_event()
+  -- An autocommand is created to run this function every time `:set
+  -- guifont=...` is run, so that the next time increase() or decrease() are
+  -- run, they'll use the updated font information. Those functions could call
+  -- this function to parse the `guifont` option on-demand, but there would be
+  -- a lot of reparsing when those functions only change the font height. It's
+  -- better to parse it only when it's changed by something outside this
+  -- module.
+  --
+  -- Unfortunately, set_font_function() may run `:set guifont=...`
+  -- triggering the autocommand that runs this function, so setting
+  -- `internal_call` to true before running set_font_function() will cause this
+  -- function to return early. This is done when it's called indirectly through
+  -- increase() or decrease().
   if internal_call then
     internal_call = false
     return
@@ -96,6 +112,7 @@ function M.font_change_event()
     return
   end
   -- match the number part of the height option
+  -- some platforms allow the font size to be a decimal number
   local size = tonumber(remaining_opts:match(":h([%d.]+)"))
   if not size then
     vim.notify("font-resize: error matching 'guifont' height option", ERROR)
@@ -125,7 +142,13 @@ function M.increase()
   if notify then
     notify(" font size "..new_size, INFO, notifyOpts)
   end
+  -- don't cause `guifont` to be reparsed
   internal_call = true
+  -- set_font_function() should fail with an error, instead of silently through
+  -- calling it with pcall() or through the function using a pcall()
+  -- internally, so that if the new_size is not a good value (e.g. 0), the last
+  -- line saving the new_size won't run, and the next time increase() or
+  -- decrease() are run, they'll use the old, good value.
   config.set_font_function(config.font_list..":h"..new_size..config.remaining_opts)
   config.size = new_size
 end
@@ -158,11 +181,14 @@ function M.reset_font()
   M.config.set_font_function(default_guifont)
 end
 
+-- create user commands that can be used as `:FontSizeUp`
 local cmd = vim.api.nvim_create_user_command
 cmd("FontSizeUp", M.increase, {})
 cmd("FontSizeDown", M.decrease, {})
 cmd("FontReset", M.reset_font, {})
 
+-- Create an autocommand that runs the font_change_event() function every time
+-- `:set guifont=...` is run
 local font_resize_augroup = "font_resize_autocmds"
 vim.api.nvim_create_augroup(font_resize_augroup, {clear = true})
 vim.api.nvim_create_autocmd("OptionSet", {
