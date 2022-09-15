@@ -113,7 +113,6 @@ function M.font_change_event()
   local font_list, remaining_opts = guifont:match("^(.-)(:.*)$")
   if font_list == nil or remaining_opts == nil then
     vim.notify("font-resize: error matching 'guifont': "..tostring(guifont), ERROR)
-    M.config = false
     return
   end
   -- match the number part of the height option
@@ -121,7 +120,6 @@ function M.font_change_event()
   local size = tonumber(remaining_opts:match(":h([%d.]+)"))
   if not size then
     vim.notify("font-resize: error matching 'guifont' height option: "..tostring(guifont), ERROR)
-    M.config = false
     return
   end
   -- remove the height option
