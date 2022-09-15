@@ -140,7 +140,7 @@ function M.increase()
   local new_size = config.size + config.step_size
   local notify = notify
   if notify then
-    notify(" font size "..new_size, INFO, notifyOpts)
+    notify("↑ font size "..new_size, INFO, notifyOpts)
   end
   -- don't cause `guifont` to be reparsed
   internal_call = true
@@ -166,7 +166,7 @@ function M.decrease()
   local new_size = max(config.size - config.step_size, 1)
   local notify = notify
   if notify then
-    notify(" font size "..new_size, INFO, notifyOpts)
+    notify("↓ font size "..new_size, INFO, notifyOpts)
   end
   internal_call = true
   config.set_font_function(config.font_list..":h"..new_size..config.remaining_opts)
