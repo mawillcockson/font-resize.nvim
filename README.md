@@ -136,13 +136,13 @@ use {
   keys = {
     -- As of August 2022, FVim and neovim-qt work with all the keybinds, and
     ---[[ Goneovim only works with these
-    "<C-=>", -- up
-    "<C-->", -- down
-    "<C-0>", -- reset
+    "<C-=>",               -- increase
+    "<C-->",               -- increase
+    "<C-0>",               -- reset
     --]]
     ---[[ Neovide only works with these
-    "<C-ScrollWheelUp>",
-    "<C-ScrollWheelDown>",
+    "<C-ScrollWheelUp>",   -- increase
+    "<C-ScrollWheelDown>", -- decrease
     --]]
     -- The keybinds may work in the terminal, but this plugin should not be
     -- loaded in that case as the terminal should handle the font resizing, not
