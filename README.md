@@ -50,7 +50,7 @@ if vim.g.neovide or vim.g.goneovim or vim.g.nvui or vim.g.gnvim then
 end
 ```
 
-[More info about `notify.setup()`.][nvim-notify setup]
+[More info about `background_colour` in `notify.setup()`.][background_colour]
 
 ## Configuration
 
@@ -61,7 +61,7 @@ use {
   "mawillcockson/font-resize.nvim",
   -- Mark this plugin as one that will be manually loaded, instead of
   -- automatically when Neovim launches. packer.nvim also supports configuring
-  -- autoloading on keybinds, filetype events, etc.
+  -- loading on keybinds, filetype events, etc.
   opt = true,
   -- (optional) Add a notification plugin as a dependency, for fancy font size
   -- update messages. This isn't required, and can be removed. The plugin must
@@ -96,7 +96,8 @@ use {
   -- immediately after the plugin is loaded.
   config = function()
     -- These are the default values used if the name is not set in the table
-    -- passed to setup()
+    -- passed to setup(), but many of the values should not be copied and used
+    -- as-is
     require("font-resize").setup{
       -- If this is set to `true`, the setup() function will configure keybinds
       -- to match the table at the top of this README
@@ -104,15 +105,18 @@ use {
       -- The amount by which to increase and decrease the font size each time a
       -- keybind is pressed or a :FontSizeUp / :FontSizeDown command is called
       step_size = 1,
-      -- Sets whether to print a message each time the font is resized
+      -- Sets whether to print a message each time the font is resized or reset
       -- NOTE: it does not matter if rcarriga/nvim-notify is installed or not, this
       -- is a global flag to enable ANY notifications or not
       -- By default, this will enable notifications only if a plugin called
       -- `notify` is available
+      -- Should be set to `true` or `false` if set at all
       notifications = pcall(require, "notify"),
       -- The value to reset the font to in case something goes wrong, or the
       -- reset keybind or function is used.
-      -- This should be a valid value to pass to the set_font_function()
+      -- By default, this records the value of the `guifont` option when the
+      -- plugin is first loaded
+      -- This should be set to a valid value to pass to the set_font_function()
       -- (e.g. "Consolas:h12")
       default_guifont = vim.o.guifont,
       -- The function to use to change the font. Takes a single argument that's
@@ -131,12 +135,12 @@ use {
   -- `use_default_mappings` is set to `true`.
   keys = {
     -- As of August 2022, FVim and neovim-qt work with all the keybinds, and
-    --[[ Goneovim only works with these
+    ---[[ Goneovim only works with these
     "<C-=>", -- up
     "<C-->", -- down
     "<C-0>", -- reset
     --]]
-    --[[ Neovide only works with these
+    ---[[ Neovide only works with these
     "<C-ScrollWheelUp>",
     "<C-ScrollWheelDown>",
     --]]
@@ -148,8 +152,8 @@ use {
   -- this plugin when a matching one is encountered. This means that loading
   -- this plugin in lua only needs `require("font-resize")`, and doesn't need a
   -- preceding call to `vim.cmd[[:packadd font-resize.nvim]]`, even though this
-  -- plugin is marked as `opt = true` and its name is `font-resize.nvim`, not
-  -- `font-resize`.
+  -- configuration marks this plugin as `opt = true` and its name is
+  -- `font-resize.nvim`, not `font-resize`.
   module = "font-resize",
 },
 ```
@@ -158,8 +162,10 @@ use {
 
 nvim >= v0.7 _- as APIs introduced with v0.7 are used._
 
-[packer.nvim]: https://github.com/wbthomason/packer.nvim
+An error message should be printed if this requirement isn't met.
+
+[packer.nvim]: <https://github.com/wbthomason/packer.nvim>
 [`init.lua`]: <https://neovim.io/doc/user/starting.html#init.lua>
 [Neovim's builtin `vim.notify()`]: <https://neovim.io/doc/user/lua.html#vim.notify()>
-[rcarriga/nvim-notify]: https://github.com/rcarriga/nvim-notify
-[nvim-notify setup]: https://github.com/rcarriga/nvim-notify#setup
+[rcarriga/nvim-notify]: <https://github.com/rcarriga/nvim-notify>
+[background_colour]: <https://github.com/rcarriga/nvim-notify/issues/101#issuecomment-1147351791>
