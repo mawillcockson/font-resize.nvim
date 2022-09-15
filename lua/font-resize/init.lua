@@ -152,6 +152,7 @@ function M.increase()
   -- internally, so that if the new_size is not a good value (e.g. 0), the last
   -- line saving the new_size won't run, and the next time increase() or
   -- decrease() are run, they'll use the old, good value.
+  -- Also, lua automatically converts numbers to strings with the .. concatenation operator
   config.set_font_function(config.font_list..":h"..new_size..config.remaining_opts)
   config.size = new_size
 end
