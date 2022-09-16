@@ -115,9 +115,9 @@ use {
       -- The value to reset the font to in case something goes wrong, or the
       -- reset keybind or function is used.
       -- By default, this records the value of the `guifont` option when the
-      -- plugin is first loaded
-      -- This should be set to a valid value to pass to the set_font_function()
-      -- (e.g. "Consolas:h12")
+      -- plugin is first loaded.
+      -- If set, this should be set to a valid value to pass to the
+      -- set_font_function() (e.g. "Consolas:h12")
       default_guifont = vim.o.guifont,
       -- The function to use to change the font. Takes a single argument that's
       -- formatted for use with `:set guifont=...`
