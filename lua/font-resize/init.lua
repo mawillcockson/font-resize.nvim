@@ -57,13 +57,13 @@ function M.setup(opts)
 
   if M.config.default_guifont == "" then
     local default_guifont = ""
-    if vim.fn.has("win32") ~= 0 then
+    if vim.fn.has("win32") > 0 then
       -- This font is very likely already installed
       default_guifont = "Consolas:h11"
     else
       local platform = "unknown"
       for _, name in ipairs{"bsd", "linux", "mac", "sun", "unix", "wsl"} do
-        if vim.fn.has(name) ~= 0 then
+        if vim.fn.has(name) > 0 then
           platform = name
           break
         end
