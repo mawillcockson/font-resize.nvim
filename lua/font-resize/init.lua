@@ -180,7 +180,7 @@ end
 function M.reset_font()
   local default_guifont = M.config.default_guifont
   if notify then
-    notify(" "..default_guifont, INFO, notifyOpts)
+    notify("⟲ font reset "..default_guifont, INFO, notifyOpts)
   end
   M.config.set_font_function(default_guifont)
 end
