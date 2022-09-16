@@ -57,10 +57,23 @@ function M.setup(opts)
 
   if M.config.default_guifont == "" then
     local default_guifont = ""
-    if vim.fn.has("win32") then
+    if vim.fn.has("win32") ~= 0 then
+      -- This font is very likely already installed
       default_guifont = "Consolas:h11"
     else
-      vim.notify("font-resize: set a default_guifont for this platform", ERROR)
+      local platform = "unknown"
+      for _, name in ipairs{"bsd", "linux", "mac", "sun", "unix", "wsl"} do
+        if vim.fn.has(name) ~= 0 then
+          platform = name
+          break
+        end
+      end
+      vim.notify(
+        "font-resize: either the guifont option needs to be set before setup() is called, "..
+        "or the default_guifont key needs to be set in the table passed to setup(), "..
+        "or a fallback needs to be configured for this platform '"..platform.."' in the plugin",
+        ERROR
+      )
       assert(false)
       default_guifont = ""
     end
