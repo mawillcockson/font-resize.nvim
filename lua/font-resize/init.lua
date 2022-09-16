@@ -55,6 +55,19 @@ function M.setup(opts)
     notify = false
   end
 
+  if M.config.default_guifont == "" then
+    local default_guifont = ""
+    if vim.fn.has("win32") then
+      default_guifont = "Consolas:h11"
+    else
+      vim.notify("font-resize: set a default_guifont for this platform", ERROR)
+      assert(false)
+      default_guifont = ""
+    end
+    vim.notify("font-resize: default_guifont is empty, falling back to '"..default_guifont.."'", WARN)
+    M.config.default_guifont = default_guifont
+  end
+
   if M.config.use_default_mappings then
     local map = vim.keymap.set
     -- I don't know how to map all of these consistently.
